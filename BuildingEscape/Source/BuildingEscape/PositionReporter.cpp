@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Robert Allen 2017
 
 #include "BuildingEscape.h"
 #include "PositionReporter.h"
