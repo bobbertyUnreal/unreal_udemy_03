@@ -20,10 +20,33 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
 	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty!"));
-	
+
+	/// Look for attached physics handle and assign to reference
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>(); // Templatized finder gets the physics handle
+	if (PhysicsHandle)
+	{
+		// Physics handle is found
+	} else {
+		UE_LOG(LogTemp, Error, TEXT("/s missing physics handle component"),	*GetOwner()->GetName());
+	};
+
+	/// Look for attached input component and assign to reference
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>(); // Templatized finder gets the input component
+	if (InputComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Input component found"));
+		// Bind the input axis
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("/s missing input component"), *GetOwner()->GetName());
+	};
 }
+
+void UGrabber::Grab() {
+	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
+};
 
 
 // Called every frame
@@ -44,7 +67,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		*PlayerViewPointRotation.ToString()
 	);
 	*/
-	float Reach = 100.f;
+	
 	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
 
 	/// Draw a red line
