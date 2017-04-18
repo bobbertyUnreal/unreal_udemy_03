@@ -26,13 +26,6 @@ void UOpenDoor::BeginPlay()
 	}
 }
 
-// Opens the door
-void UOpenDoor::OpenDoor()
-{
-	// Pass open request to blueprint
-	OnOpenRequest.Broadcast();
-}
-
 // Close the door
 void UOpenDoor::CloseDoor()
 {	
@@ -49,14 +42,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (!PressurePlate) { return; }
 	if (GetMassOnPlate() > TriggerMass) // If the ActorThatOpens is in the volume
 	{
-		OpenDoor();
-		DoorLastOpenTime = GetWorld()->GetRealTimeSeconds();
+		// Pass open request to blueprint
+		OnOpen.Broadcast();
 	}
-
-	// Check if it is time to close the door
-	if (GetWorld()->GetRealTimeSeconds() - DoorLastOpenTime > DoorCloseDelay) // If the close door delay has elapsed
+	else
 	{
-		CloseDoor();
+		// Pass close request to blueprint
+		OnClose.Broadcast();
 	}
 }
 
