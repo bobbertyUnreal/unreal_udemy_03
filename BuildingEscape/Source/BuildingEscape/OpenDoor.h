@@ -5,6 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "OpenDoor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenRequest);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenDoor : public UActorComponent
@@ -26,20 +27,21 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnOpenRequest OnOpenRequest;
+
 private:
 	UPROPERTY(EditAnywhere)
-	float OpenAngle = -85.0f;
+	ATriggerVolume* PressurePlate = nullptr;
+
+	AActor* Owner = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	float DoorCloseDelay = 0.5f;
 
-	UPROPERTY(EditAnywhere)
-	float DoorCloseDelay = 1.f;
+	float DoorLastOpenTime = 0.0f;
 
-	float DoorLastOpenTime;
+	float TriggerMass = 50.f;
 
-	AActor* Owner;
-
-	//UPROPERTY(EditAnywhere)
-	AActor* ActorThatOpens; // Remebder pawn inherets from actor
+	float GetMassOnPlate();	
 };

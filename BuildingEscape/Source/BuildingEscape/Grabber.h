@@ -47,4 +47,10 @@ private:
 
 	// Return hit for first physics body in reach
 	const FHitResult GetFirstPhysicsBodyInReach();
+
+	// Get the player view point location
+	FVector GetReachStart();
+
+	// Get the end of the line trace vector
+	FVector GetReachEnd();
 };
